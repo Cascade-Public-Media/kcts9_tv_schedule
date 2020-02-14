@@ -1,0 +1,269 @@
+<?php
+
+/**
+ * @file
+ * Hooks for the KCTS 9 TV Schedule module.
+ */
+
+use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\taxonomy\TermInterface;
+use Drupal\views\ViewExecutable;
+use Drupal\dfp\Entity\Tag;
+use Drupal\Core\Template\Attribute;
+
+/**
+ * Implements hook_theme().
+ */
+function kcts9_tv_schedule_theme(): array {
+  return [
+    'kcts9_tv_schedule_view_date_picker' => [
+      'variables' => [
+        'attributes' => [],
+        'dates' => [],
+        'default_date' => NULL,
+        'next_week_date' => NULL,
+        'last_week_date' => NULL,
+      ],
+    ],
+    'kcts9_tv_schedule_view_channel_picker' => [
+      'variables' => [
+        'attributes' => [],
+        'channels' => [],
+        'default_channel' => NULL,
+      ],
+    ],
+    'kcts9_tv_schedule_view_options' => [
+      'variables' => [
+        'attributes' => [],
+        'current_only' => NULL,
+        'favorites_only' => FALSE,
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_views_pre_view().
+ */
+function kcts9_tv_schedule_views_pre_view(
+  ViewExecutable $view,
+  $display_id,
+  array &$args
+): void {
+  if ($view->id() == 'kcts9_tv_schedule' && $display_id == 'schedule') {
+
+    // Date contextual filter.
+    if (empty($args[0])) {
+      $args[0] = date('Ymd');
+    }
+
+    // Channel contextual filter.
+    if (empty($args[1])) {
+      if ($channel = _kcts9_tv_schedule_view_get_default_channel()) {
+        $args[1] = $channel->id();
+      }
+    }
+
+    // Favorites contextual filter.
+    if (empty($args[2])) {
+      $args[2] = 'all';
+    }
+
+    // Favorites filter is a regular View filter. If the contextual filter value
+    // is set to "favorites", the View filter is adjusted to filter by flagged
+    // favorites.
+    if ($args[2] === 'favorites') {
+      $filters = $view->display_handler->getOption('filters');
+      if (isset($filters['flagged'])) {
+        $filters['flagged']['value'] = TRUE;
+        $view->display_handler->overrideOption('filters', $filters);
+      }
+    }
+    else {
+      // The default behavior of this handler is to filter content that has
+      // _not_ been favorited out of the View. The filter must be removed
+      // entirely to display content regardless of whether it is favorited.
+      $view->removeHandler($view->current_display, 'filter', 'flagged');
+    }
+
+    // "Current only" contextual filter.
+    if (empty($args[3])) {
+      $args[3] = 'current-only';
+    }
+
+    // "Current only" filter is a regular View filter on the "End time" Schedule
+    // Item field. If the contextual filter value is set to "current-only", the
+    // View filter is adjusted to hide items from previous times _if_ the view
+    // is also filtering for the current date. This is the "display earlier"
+    // functionality presented to the user.
+    if ($args[3] != "current-only" || $args[0] != date('Ymd')) {
+      $view->removeHandler(
+        $view->current_display,
+        'filter',
+        'field_end_time_value'
+      );
+    }
+  }
+}
+
+/**
+ * Implements hook_views_pre_build().
+ */
+function kcts9_tv_schedule_views_pre_render(ViewExecutable $view): void {
+  if ($view->id() == 'kcts9_tv_schedule'
+    && $view->current_display == 'schedule') {
+    \Drupal::moduleHandler()->loadInclude(
+      'kcts9_tv_schedule',
+      'inc',
+      'includes/kcts9_tv_schedule.view'
+    );
+    kcts9_tv_schedule_view_alter($view);
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function kcts9_tv_schedule_preprocess_views_view_unformatted(&$variables) {
+  if ($variables['view']->id() == 'kcts9_tv_schedule' && count($variables['rows']) > 1) {
+
+    // Setting up placement rules.
+    $ad_placements = [6, 9, 12, 15];
+    $ads_placed = 0;
+    $ad_suffix = '';
+    $ad_attributes = new Attribute(['class' => ['schedule-item__ad']]);
+
+    // Loading view builder for loading ad tags as we go.
+    $view_builder = Drupal::entityTypeManager()->getViewBuilder('dfp_tag');
+
+    foreach ($ad_placements as $slot) {
+      // Adding number of ads placed to make sure the ads sit in the right spot.
+      if (count($variables['rows']) > $slot) {
+
+        // This will get us the other ad tags.
+        if ($ads_placed > 0) {
+          $ad_suffix = '_' . ($ads_placed + 1);
+        }
+
+        // Putting together the leaderboard tag to render.
+        $dfp_tag = Tag::load('kcts_zenith_leaderboard' . ($ad_suffix));
+        $dfp_tag_view = $view_builder->view($dfp_tag);
+        $dfp_tag_view['#cache'] = ['max-age' => 0];
+        $leader_ad = ['content' => $dfp_tag_view];
+        $leader_ad['attributes'] = $ad_attributes;
+
+        // Injecting the ad into the results.
+        $slot = $slot + $ads_placed;
+        $rows = array_splice($variables['rows'], $slot);
+        $variables['rows'][] = $leader_ad;
+        array_unshift($rows, ...$variables['rows']);
+        $variables['rows'] = $rows;
+        $ads_placed++;
+      }
+    }
+
+    // Getting billboard.
+    $billboard_block_config = \Drupal::configFactory()->get('block.block.promoschedule');
+    $variables['promo'] = $billboard_block_config->get('plugin');
+  }
+}
+
+/**
+ * Implements hook_cron().
+ *
+ * @throws \Exception
+ */
+function kcts9_tv_schedule_cron() {
+  /** @var \Drupal\kcts9_tv_schedule\ScheduleItemManager $scheduleItemManager */
+  $scheduleItemManager = Drupal::service('kcts9_tv_schedule.schedule_item_manager');
+
+  $request_time = Drupal::time()->getRequestTime();
+  $now = new DrupalDateTime("@{$request_time}");
+
+  // Update all future schedule data once a day.
+  $diff = $now->diff($scheduleItemManager->getLastFullUpdate());
+  if ($diff->days >= 1) {
+    $scheduleItemManager->updateFromDate($now);
+    $scheduleItemManager->setLastFullUpdate(new DrupalDateTime());
+    $full_update_ran = TRUE;
+  }
+  else {
+    $full_update_ran = FALSE;
+  }
+
+  // Update today's schedule data once ever two hours or so.
+  if (!$full_update_ran) {
+    $now = new DrupalDateTime("@{$request_time}");
+    $diff = $now->diff($scheduleItemManager->getLastDayUpdate());
+    if ($diff->days > 0 || $diff->h >= 2) {
+      $scheduleItemManager->updateByDate($now->format('Y-m-d'));
+      $scheduleItemManager->setLastDayUpdate(new DrupalDateTime());
+    }
+  }
+
+  // Update queue to remove all Schedule Item nodes older than one month from
+  // the system once a day.
+  $now = new DrupalDateTime("@{$request_time}");
+  $diff = $now->diff($scheduleItemManager->getLastPruneTime());
+  if ($diff->days >= 1) {
+    $scheduleItemManager->queueOldScheduleItemsForDelete();
+    $scheduleItemManager->setLastPruneTime(new DrupalDateTime());
+  }
+}
+
+/**
+ * Gets the default Channel term for the Schedule View.
+ *
+ * @return \Drupal\taxonomy\TermInterface|null
+ *   Channel term or NULL if none found.
+ */
+function _kcts9_tv_schedule_view_get_default_channel(): ?TermInterface {
+  /** @var \Drupal\kcts9_tv_schedule\ChannelManager $channelManager */
+  $channelManager = Drupal::service('kcts9_tv_schedule.channel_manager');
+  return $channelManager->getScheduleDefaultChannel();
+}
+
+/**
+ * Updates Schedule Item data for a single date.
+ *
+ * @param string|null $date
+ *   Date string in the format Y-m-d. Defaults to current date.
+ *
+ * @see \Drupal\kcts9_tv_schedule\ScheduleItemManager::updateByDate()
+ */
+function _kcts9_tv_schedule_update_by_date(string $date = NULL): void {
+  if (empty($date)) {
+    $today = new DrupalDateTime();
+    $date = $today->format('Y-m-d');
+  }
+  /** @var \Drupal\kcts9_tv_schedule\ScheduleItemManager $scheduleItemManager */
+  $scheduleItemManager = Drupal::service('kcts9_tv_schedule.schedule_item_manager');
+  $scheduleItemManager->updateByDate($date);
+}
+
+/**
+ * Updates Schedule Item data _from_ a date into the future.
+ *
+ * @param \Drupal\Core\Datetime\DrupalDateTime|null $date
+ *   Date to update from (or NULL to update from now).
+ *
+ * @throws \Exception
+ *
+ * @see \Drupal\kcts9_tv_schedule\ScheduleItemManager::updateFromDate()
+ */
+function _kcts9_tv_schedule_update_from_date(DrupalDateTime $date = NULL): void {
+  /** @var \Drupal\kcts9_tv_schedule\ScheduleItemManager $scheduleItemManager */
+  $scheduleItemManager = Drupal::service('kcts9_tv_schedule.schedule_item_manager');
+  $scheduleItemManager->updateFromDate($date);
+}
+
+/**
+ * Updates Channel taxonomy terms based on TVSS API data.
+ *
+ * @see \Drupal\kcts9_tv_schedule\ChannelManager::update()
+ */
+function _kcts9_tv_schedule_update_channels(): void {
+  /** @var \Drupal\kcts9_tv_schedule\ChannelManager $channelManager */
+  $channelManager = Drupal::service('kcts9_tv_schedule.channel_manager');
+  $channelManager->update();
+}

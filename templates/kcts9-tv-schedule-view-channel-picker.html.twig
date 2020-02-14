@@ -1,0 +1,32 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the KCTS 9 TV Schedule View Channel Picker.
+ *
+ * Clickable elements must have three properties in order to inteact with the
+ * View refresh process:
+ * - The "kcts9-tv-schedule-view-arg-update" class triggers the update process
+ *   on click.
+ * - The "data-type" specifies the type of filter to update (should be "channel").
+ * - The "data-value" specified the value to update to (term ID).
+ *
+ * Available variables:
+ * - attributes: Attributes for the container.
+ * - channels: Array of Channel options (TaxonomyTerm objects) to select from.
+ * - default_channel: Currently selected Channel.
+ *
+ * @ingroup themeable
+ * @ingroup kcts9_tv_schedule
+ */
+#}
+
+<div{{ attributes }}>
+  {% for channel in channels %}
+    <button
+      class="kcts9-tv-schedule-view-arg-update"
+      data-type="channel"
+      data-value="{{ channel.id }}">
+      {{ channel.label }}
+    </button>
+  {% endfor %}
+</div>

@@ -1,0 +1,16 @@
+name: KCTS 9 TV Schedule
+type: module
+description: PBS TV Schedules Service API sync operations container.
+core: 8.x
+package: KCTS 9
+
+dependencies:
+  - 'drupal:node'
+  - 'drupal:field'
+  - 'drupal:taxonomy'
+  - 'drupal:user'
+  - 'drupal:views'
+  - 'flag'
+  - 'kcts9_media_manager'
+
+configure: kcts9_tv_schedule.settings

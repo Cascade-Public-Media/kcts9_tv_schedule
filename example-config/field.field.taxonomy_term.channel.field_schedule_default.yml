@@ -1,0 +1,23 @@
+uuid: edd3afa5-94d0-4d2c-9d74-af993b08ef03
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_schedule_default
+    - taxonomy.vocabulary.channel
+id: taxonomy_term.channel.field_schedule_default
+field_name: field_schedule_default
+entity_type: taxonomy_term
+bundle: channel
+label: 'Default Channel for Schedule'
+description: 'Controls the default Channel to be used on the <a href="/schedule">Schedule page</a>. Only one Channel taxonomy term should be set as the default.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

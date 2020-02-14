@@ -1,0 +1,38 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the KCTS 9 TV Schedule "Options" element.
+ *
+ * Available variables:
+ * - attributes: Attributes for the container.
+ * - current_only: Boolean indicator if items before the current time should be
+ *   displayed. This only applies if the View is filtered for the current date,
+ *   otherwise it will be NULL.
+ * - favorites_only: Boolean indicator is favorites are currently filtered.
+ *
+ * @ingroup themeable
+ * @ingroup kcts9_tv_schedule
+ */
+#}
+
+<div{{ attributes }}>
+
+  <lable>Only display my favorites</lable>
+  <input
+    type="checkbox"
+    class="kcts9-tv-schedule-view-arg-update"
+    data-type="favorites"
+    data-value="{{ (favorites_only) ? 0 : 1 }}"
+    {% if favorites_only %}checked{% endif %}
+  />
+
+  {% if current_only is not null %}
+  <button
+    class="kcts9-tv-schedule-view-arg-update"
+    data-type="current-only"
+    data-value="{{ (current_only) ? 0 : 1 }}">
+    {{ (current_only) ? 'Display'|t : 'Hide'|t }} {% trans %}earlier{% endtrans %}
+  </button>
+  {% endif %}
+
+</div>

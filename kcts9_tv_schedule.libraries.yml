@@ -1,0 +1,8 @@
+view.kcts9_tv_schedule:
+  version: VERSION
+  js:
+    js/view.kcts9_tv_schedule.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once

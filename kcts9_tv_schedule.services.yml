@@ -1,0 +1,28 @@
+services:
+  kcts9_tv_schedule.api_client:
+    class: Drupal\kcts9_tv_schedule\ApiClient
+    arguments:
+      - '@config.factory'
+  kcts9_tv_schedule.channel_manager:
+    class: Drupal\kcts9_tv_schedule\ChannelManager
+    arguments:
+      - '@kcts9_tv_schedule.api_client'
+      - '@entity_type.manager'
+      - '@logger.channel.kcts9_tv_schedule'
+      - '@queue'
+      - '@state'
+  kcts9_tv_schedule.schedule_item_manager:
+    class: Drupal\kcts9_tv_schedule\ScheduleItemManager
+    arguments:
+      - '@kcts9_tv_schedule.api_client'
+      - '@kcts9_tv_schedule.channel_manager'
+      - '@entity_type.manager'
+      - '@logger.channel.kcts9_tv_schedule'
+      - '@queue'
+      - '@kcts9_media_manager.show_manager'
+      - '@state'
+  logger.channel.kcts9_tv_schedule:
+    class: Drupal\Core\Logger\LoggerChannel
+    factory: logger.factory:get
+    arguments:
+      - 'kcts9_tv_schedule'

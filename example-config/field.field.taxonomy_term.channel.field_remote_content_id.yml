@@ -1,0 +1,19 @@
+uuid: b694a52f-63ce-4f1e-beb6-d46556209c41
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_remote_content_id
+    - taxonomy.vocabulary.channel
+id: taxonomy_term.channel.field_remote_content_id
+field_name: field_remote_content_id
+entity_type: taxonomy_term
+bundle: channel
+label: 'Remote Content ID'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

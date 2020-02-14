@@ -1,0 +1,8 @@
+uuid: b3287bdb-afea-4568-83ed-d3661ac9b541
+langcode: en
+status: true
+dependencies: {  }
+name: Channel
+vid: channel
+description: ''
+weight: 0

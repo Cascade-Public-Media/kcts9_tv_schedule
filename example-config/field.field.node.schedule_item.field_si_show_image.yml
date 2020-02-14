@@ -1,0 +1,19 @@
+uuid: 046f3bc6-24ae-4827-904a-c3a8b03670e4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_si_show_image
+    - node.type.schedule_item
+id: node.schedule_item.field_si_show_image
+field_name: field_si_show_image
+entity_type: node
+bundle: schedule_item
+label: 'Show Image'
+description: 'Show image URL from the PBS TV Schedules Service API.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

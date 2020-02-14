@@ -1,0 +1,31 @@
+kcts9_tv_schedule.settings:
+  path: '/admin/config/system/kcts9-tv-schedule'
+  defaults:
+    _form: '\Drupal\kcts9_tv_schedule\Form\Kcts9TvScheduleSettingsForm'
+    _title: 'KCTS 9 TV Schedule'
+  requirements:
+    _permission: 'administer site configuration'
+
+kcts9_tv_schedule.schedule_items_update_form:
+  path: '/admin/config/system/kcts9-tv-schedule/update'
+  defaults:
+    _form: '\Drupal\kcts9_tv_schedule\Form\ScheduleItemsUpdateForm'
+    _title: 'Schedule Updater'
+  requirements:
+    _permission: 'sync kcts 9 tv schedule content'
+
+kcts9_tv_schedule.node.update_form:
+  path: '/node/{node}/kcts9-tv-schedule'
+  defaults:
+    _form: '\Drupal\kcts9_tv_schedule\Form\NodeUpdateForm'
+    _title_callback: '\Drupal\kcts9_tv_schedule\Form\NodeUpdateForm::getTitle'
+  requirements:
+    _custom_access: '\Drupal\kcts9_tv_schedule\Form\NodeUpdateForm::checkAccess'
+    _permission: 'sync kcts 9 tv schedule content'
+    node: \d+
+  options:
+    _admin_route: TRUE
+    _node_operation_route: TRUE
+    parameters:
+      node:
+        type: 'entity:node'

@@ -1,0 +1,23 @@
+uuid: e56a09b4-c194-4456-94ea-6e0bf38417bb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_schedule_option
+    - taxonomy.vocabulary.channel
+id: taxonomy_term.channel.field_schedule_option
+field_name: field_schedule_option
+entity_type: taxonomy_term
+bundle: channel
+label: 'Schedule option'
+description: 'Controls whether this Channel should be an option on the <a href="/schedule">Schedule page</a>.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'Yes'
+  off_label: 'No'
+field_type: boolean

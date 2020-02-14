@@ -1,0 +1,23 @@
+uuid: ea80e39f-1c41-4ac8-abf2-206559b10e28
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_minutes
+    - node.type.schedule_item
+id: node.schedule_item.field_minutes
+field_name: field_minutes
+entity_type: node
+bundle: schedule_item
+label: 'Duration (minutes)'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

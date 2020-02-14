@@ -1,0 +1,11 @@
+kcts9_tv_schedule.settings:
+  route_name: kcts9_tv_schedule.settings
+  title: KCTS 9 TV Schedule
+  description: Configure settings for the KCTS 9 TV Schedule module.
+  parent: system.admin_config_system
+
+kcts9_tv_schedule.schedule_items_update_form:
+  route_name: kcts9_tv_schedule.schedule_items_update_form
+  title: Schedule Updater
+  description: Update operations for Schedule Items.
+  parent: kcts9_tv_schedule.settings

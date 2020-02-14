@@ -1,0 +1,19 @@
+uuid: 6ca52425-371e-4567-8047-f35d6200da2d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_airing_type
+    - node.type.schedule_item
+id: node.schedule_item.field_airing_type
+field_name: field_airing_type
+entity_type: node
+bundle: schedule_item
+label: 'Airing Type'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

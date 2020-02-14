@@ -1,0 +1,21 @@
+uuid: 17a3bf32-7474-4a93-b075-d16fdf81d84e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_start_time
+    - node.type.schedule_item
+  module:
+    - datetime
+id: node.schedule_item.field_start_time
+field_name: field_start_time
+entity_type: node
+bundle: schedule_item
+label: 'Start Time'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

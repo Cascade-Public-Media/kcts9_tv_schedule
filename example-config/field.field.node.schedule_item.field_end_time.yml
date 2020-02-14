@@ -1,0 +1,21 @@
+uuid: 2c7bc8b7-50a1-4b09-9b45-6444b1956d99
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_end_time
+    - node.type.schedule_item
+  module:
+    - datetime
+id: node.schedule_item.field_end_time
+field_name: field_end_time
+entity_type: node
+bundle: schedule_item
+label: 'End Time'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

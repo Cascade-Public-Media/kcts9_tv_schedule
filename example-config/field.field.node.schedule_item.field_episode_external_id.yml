@@ -1,0 +1,19 @@
+uuid: b1549094-cb1a-4475-8137-6b1a076495ce
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_episode_external_id
+    - node.type.schedule_item
+id: node.schedule_item.field_episode_external_id
+field_name: field_episode_external_id
+entity_type: node
+bundle: schedule_item
+label: 'Episode External ID'
+description: 'Media Manager ID for the episode, if this item is an episode and the ID is provided.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

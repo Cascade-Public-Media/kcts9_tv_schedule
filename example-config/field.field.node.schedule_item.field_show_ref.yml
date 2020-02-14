@@ -1,0 +1,28 @@
+uuid: 289b2935-3281-455b-ba46-e2aadb83399d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_show_ref
+    - node.type.schedule_item
+    - node.type.show
+id: node.schedule_item.field_show_ref
+field_name: field_show_ref
+entity_type: node
+bundle: schedule_item
+label: Show
+description: 'Matched local Show node, if a match could be found.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      show: show
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

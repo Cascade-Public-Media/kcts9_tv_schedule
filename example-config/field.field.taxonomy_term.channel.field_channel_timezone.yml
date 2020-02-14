@@ -1,0 +1,19 @@
+uuid: e2dfd516-faca-4919-bffc-738e1e23f966
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_channel_timezone
+    - taxonomy.vocabulary.channel
+id: taxonomy_term.channel.field_channel_timezone
+field_name: field_channel_timezone
+entity_type: taxonomy_term
+bundle: channel
+label: Timezone
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

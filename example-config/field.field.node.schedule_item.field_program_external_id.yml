@@ -1,0 +1,19 @@
+uuid: 7e44eb35-df46-4141-9ff9-4d40e63c604e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_program_external_id
+    - node.type.schedule_item
+id: node.schedule_item.field_program_external_id
+field_name: field_program_external_id
+entity_type: node
+bundle: schedule_item
+label: 'Program External ID'
+description: 'Media Manager ID for the show, if this item has a show and the ID is provided.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

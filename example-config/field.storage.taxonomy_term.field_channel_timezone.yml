@@ -1,0 +1,21 @@
+uuid: a1851332-9b80-4ab2-9e22-3c2c2fdde5cc
+langcode: en
+status: true
+dependencies:
+  module:
+    - taxonomy
+id: taxonomy_term.field_channel_timezone
+field_name: field_channel_timezone
+entity_type: taxonomy_term
+type: string
+settings:
+  max_length: 255
+  is_ascii: false
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

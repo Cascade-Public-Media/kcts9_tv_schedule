@@ -1,0 +1,14 @@
+kcts9_tv_schedule.node.update_form:
+  route_name: kcts9_tv_schedule.node.update_form
+  base_route: entity.node.canonical
+  title: 'TV Schedules Service'
+
+kcts9_tv_schedule.settings:
+  route_name: kcts9_tv_schedule.settings
+  base_route: kcts9_tv_schedule.settings
+  title: 'Settings'
+
+kcts9_tv_schedule.schedule_items_update_form:
+  route_name: kcts9_tv_schedule.schedule_items_update_form
+  base_route: kcts9_tv_schedule.settings
+  title: 'Schedule Updater'

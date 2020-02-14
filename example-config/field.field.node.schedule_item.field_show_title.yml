@@ -1,0 +1,19 @@
+uuid: 33522ced-8ada-43bf-b891-a82f9e50928a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_show_title
+    - node.type.schedule_item
+id: node.schedule_item.field_show_title
+field_name: field_show_title
+entity_type: node
+bundle: schedule_item
+label: 'Show Title'
+description: 'Title provided by the PBS TV Schedules Service API.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

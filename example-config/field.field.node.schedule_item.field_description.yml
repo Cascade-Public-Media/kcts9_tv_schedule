@@ -1,0 +1,23 @@
+uuid: bdec0927-5cd9-4ecb-91fa-3b598a2f6d50
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_description
+    - node.type.schedule_item
+  module:
+    - text
+id: node.schedule_item.field_description
+field_name: field_description
+entity_type: node
+bundle: schedule_item
+label: Description
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: true
+  required_summary: false
+field_type: text_with_summary

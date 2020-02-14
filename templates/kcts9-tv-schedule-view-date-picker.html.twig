@@ -1,0 +1,50 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the KCTS 9 TV Schedule View Date Picker.
+ *
+ * Clickable elements must have three properties in order to inteact with the
+ * View refresh process:
+ * - The "kcts9-tv-schedule-view-arg-update" class triggers the update process
+ *   on click.
+ * - The "data-type" specifies the type of filter to update (should be "date").
+ * - The "data-value" specified the value to update to (use Ymd date format).
+ *
+ * Available variables:
+ * - attributes: Attributes for the container.
+ * - dates: Array of date options (DruplaDateTime objects) to select from.
+ * - default_date: Currently selected date.
+ * - next_week_date: DrupalDateTime representing firsat day of next week.
+ * - last_week_date: DrupalDateTime representing firsat day of last week.
+ *
+ * @ingroup themeable
+ * @ingroup kcts9_tv_schedule
+ */
+#}
+
+<div{{ attributes }}>
+  {% if last_week_date is not empty %}
+    <button
+      class="kcts9-tv-schedule-view-arg-update"
+      data-type="date"
+      data-value="{{ last_week_date|date('Ymd') }}">
+      {% trans %}Last week{% endtrans %}
+    </button>
+  {% endif %}
+  {% for date in dates %}
+      <button
+        class="kcts9-tv-schedule-view-arg-update"
+        data-type="date"
+        data-value="{{ date|date('Ymd') }}">
+        {{ date|date('D M j') }}
+      </button>
+  {% endfor %}
+  {% if next_week_date is not empty %}
+    <button
+      class="kcts9-tv-schedule-view-arg-update"
+      data-type="date"
+      data-value="{{ next_week_date|date('Ymd') }}">
+      {% trans %}Next week{% endtrans %}
+    </button>
+  {% endif %}
+</div>
